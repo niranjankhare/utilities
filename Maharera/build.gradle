@@ -3,6 +3,9 @@ apply plugin: 'eclipse'
 
 sourceCompatibility = 1.5
 version = '1.0'
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0' //we want gradle 2.10 to run this project
+}
 jar {
     manifest {
         attributes 'Implementation-Title': 'Gradle Quickstart',
@@ -15,8 +18,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    testCompile group: 'junit', name: 'junit', version: '4.+'
+    compile 'org.jsoup:jsoup:1.10.3'
 }
 
 test {
