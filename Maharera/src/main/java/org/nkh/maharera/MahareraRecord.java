@@ -1,6 +1,8 @@
 package org.nkh.maharera;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,6 +16,8 @@ public class MahareraRecord {
 	private Document record = null;
 	private String internalType = "Individual";
 	private String typeInfo= null;
+	
+	public List<BuildingRecord> Buildings = new ArrayList<BuildingRecord>(); 
 	public MahareraRecord (Document source ){
 		this.record = source;
 		this.internalType = Parser.getTypeInfo(record);
