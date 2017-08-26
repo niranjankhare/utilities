@@ -14,14 +14,15 @@ import javax.xml.validation.Schema;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import jdk.internal.org.xml.sax.SAXException;
 
 public class Parser {
 	public static Document parse() throws ParserConfigurationException, IOException, SAXException {
-		
-		URL is = Parser.class.getClassLoader().getResource("Record.html");
-		File input= null;
+
+		URL is = Parser.class.getClassLoader().getResource("RecordCompany.html");
+		File input = null;
 		try {
 			input = new File(is.toURI());
 		} catch (URISyntaxException e) {
@@ -29,21 +30,110 @@ public class Parser {
 			e.printStackTrace();
 		}
 		Document doc = Jsoup.parse(input, "UTF-8");
-		
+
 		return doc;
 	}
 
-	public static String getName(Document doc) {
+	public static String getInternalType(Document doc) {
+		Element rawType = doc.getElementById("fldind");
+		if (rawType != null)
+			return "Individual";
+		else
+			return "Non Individual";
+	}
+
+	public static String getTypeInfo(Document doc) {
 		Element rawType = doc.getElementById("divInfoType");
-		for (Element e:rawType.getAllElements()){
-			if (e.hasText()) 
-				System.out.println(""+ e.html());
-		}
-		return "";
+		Element y = rawType.getElementsByAttributeValue("for", "PersonalInfoModel_InfoTypeValue").get(0);
+		return y.parent().siblingElements().text();
 	}
 	
-//	Document doc = Jsoup.connect("http://example.com/").get();
-//	String title = doc.title();
-//	File input = new File("/tmp/input.html");
-//	Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
+	public static String owner (){
+		return null;
+		
+	}
+	
+	public static String projectName (){
+		return null;
+	}
+	
+	public static String pinCode(){
+		return null;
+	}
+	
+	public static String division(){
+		return null;
+	}
+	
+	public static String district(){
+		return null;
+	}
+	
+	public static String taluka(){
+		return null;
+	}
+	
+	public static String village(){
+		return null;
+	}
+
+	public static String areaSqM (){
+		return null;
+	}
+	
+	public static String projectType (){
+		return null;
+	}
+	
+	public static String buildingNo () {
+		return null;
+	}
+	
+	public static String buildingName (){
+		return null;
+	}
+	
+	public static String numBasements (){
+		return null;
+	}
+	
+	public static String numPlinths (){
+		return null;
+	}
+	
+	public static String numPodiums (){
+		return null;
+	}
+	
+	public static String numSupStructSlabs (){
+		return null;
+	}
+	
+	public static String numStilts (){
+		return null;
+	}
+	
+	public static String numOpenParking (){
+		return null;
+	}
+	
+	public static String numClosedParking (){
+		return null;
+	}
+	
+	public static String apartmentType (){
+		return null;
+	}
+	public static String carpetAreaSqM (){
+		return null;
+	}public static String numApartments (){
+		return null;
+	}public static String bookedApartments (){
+		return null;
+	}
+	
+	/**
+	 * 		Carpet Area (in Sqmts)	Number of Apartment	Number of Booked Apartment
+	 */
+			
 }

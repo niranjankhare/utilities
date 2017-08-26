@@ -17,7 +17,7 @@ public class MahareraMain {
 		try {
 //			HttpLib.doPost("https://maharerait.mahaonline.gov.in/Searchlist/GetDistrict", "");
 			Document docRecord = Parser.parse();
-			Parser.getName (docRecord);
+			Parser.getTypeInfo (docRecord);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
