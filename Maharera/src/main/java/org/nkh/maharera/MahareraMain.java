@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.jsoup.nodes.Document;
 import org.nkh.utils.HttpLib;
 import org.nkh.utils.Parser;
 
@@ -14,7 +15,9 @@ public class MahareraMain {
 	public static void main(String[] args) {
 		
 		try {
-			HttpLib.doPost("https://maharerait.mahaonline.gov.in/Searchlist/GetDistrict", "");
+//			HttpLib.doPost("https://maharerait.mahaonline.gov.in/Searchlist/GetDistrict", "");
+			Document docRecord = Parser.parse();
+			Parser.getName (docRecord);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

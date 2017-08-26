@@ -4,7 +4,7 @@ apply plugin: 'eclipse'
 sourceCompatibility = 1.5
 version = '1.0'
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.0' //we want gradle 2.10 to run this project
+    gradleVersion = '2.0' 
 }
 jar {
     manifest {

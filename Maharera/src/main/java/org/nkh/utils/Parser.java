@@ -13,6 +13,7 @@ import javax.xml.validation.Schema;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import jdk.internal.org.xml.sax.SAXException;
 
@@ -30,6 +31,15 @@ public class Parser {
 		Document doc = Jsoup.parse(input, "UTF-8");
 		
 		return doc;
+	}
+
+	public static String getName(Document doc) {
+		Element rawType = doc.getElementById("divInfoType");
+		for (Element e:rawType.getAllElements()){
+			if (e.hasText()) 
+				System.out.println(""+ e.html());
+		}
+		return "";
 	}
 	
 //	Document doc = Jsoup.connect("http://example.com/").get();
