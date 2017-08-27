@@ -1,16 +1,14 @@
 package org.nkh.maharera;
 
 import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jsoup.nodes.Document;
 import org.nkh.utils.HttpLib;
 import org.nkh.utils.Parser;
 
-import javax.xml.parsers.*;
 import org.xml.sax.*;
-import org.xml.sax.helpers.*;
 
 
 public class MahareraMain {
@@ -19,8 +17,12 @@ public class MahareraMain {
 		
 		try {
 //			HttpLib.doPost("https://maharerait.mahaonline.gov.in/Searchlist/GetDistrict", "");
-			Document docRecord = Parser.parse();
-			Parser.getTypeInfo (docRecord);
+			Document docCompany = Parser.parse("RecordCompany.html");
+			MahareraRecord company  = new MahareraRecord(docCompany);
+			Document docIndividual = Parser.parse("RecordIndividual.html");
+			MahareraRecord rec  = new MahareraRecord(docIndividual);
+			List<MahareraRecord> listRecords = new ArrayList<MahareraRecord>();
+			listRecords.add(rec);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
