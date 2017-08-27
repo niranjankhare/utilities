@@ -16,7 +16,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import jdk.internal.org.xml.sax.SAXException;
+import javax.xml.parsers.*;
+import org.xml.sax.*;
+import org.xml.sax.helpers.*;
+
 
 public class Parser {
 	public static Document parse() throws ParserConfigurationException, IOException, SAXException {
