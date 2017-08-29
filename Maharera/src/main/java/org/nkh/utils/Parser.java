@@ -27,7 +27,10 @@ public class Parser {
 		return doc;
 	}
 
-	
+	public static String getData(Document doc) {
+		String info = doc.getElementById("DivProject").getElementsByClass("x_panel").get(0).getElementsByClass("x_content").get(1).getElementsByClass("row").get(6).text();
+		return info;
+	}	
 
 	
 
