@@ -7,11 +7,17 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class MahareraRecord {
 
 	private URL remoteReference = null;
 	private Document record = null;
+	private Element divPInfo = null;
+	private Element internalType = null;
+	private Element divPromo = null;
+	private Element divProject = null;
+	private Element divBuilding = null;
 	private String inferredType = "Individual";
 	private String typeInfo = "";
 	private String ownerName = "";
@@ -25,12 +31,15 @@ public class MahareraRecord {
 	private String projectType = "";
 
 	public List<BuildingRecord> Buildings = new ArrayList<BuildingRecord>();
-	private Element rawType = null;
-	private Element divProject = null;
+	
 
 	public MahareraRecord(Document source) {
 		this.record = source;
+		this.divPInfo = record.getElementById("DivPInfo");
 		setInferredType();
+		this.divPromo = record.getElementById("DivPromo");
+		this.divProject = divPromo.getElementById("DivProject");
+		this.divBuilding = divPromo.getElementById("DivBuilding");
 		setTypeInfo();
 		setOwner();
 		setProjectName();
@@ -38,54 +47,45 @@ public class MahareraRecord {
 		setDivisionDistrict();
 		setTalukaVillage();
 		setProjectType(record);
-		this.Buildings = getBuildings(record);
+		setBuildings(divBuilding);
 	}
 
 	private void setInferredType() {
-		rawType = record.getElementById("fldind");
-		if (rawType == null)
-			rawType = record.getElementById("fldFirm");
+		this.internalType = divPInfo.getElementById("fldind"); 
+		if (internalType == null)
+			internalType = divPInfo.getElementById("fldFirm");
+		String rawType = internalType.text();
 	}
 
 	private void setTypeInfo() {
-		Element info = record.getElementById("divInfoType");
-		Element y = info.getElementsByAttributeValue("for", "PersonalInfoModel_InfoTypeValue").get(0);
-		this.typeInfo = y.parent().siblingElements().text();
+		Element info = divPInfo.getElementById("divInfoType").getElementsByClass("form-group").get(0);
+		this.typeInfo = info.children().get(1).text();		
 	}
 
 	private void setOwner() {
-		String info = rawType.getElementsByClass("x_panel").get(0).getElementsByClass("x_content").get(0)
-				.getElementsByClass("row").get(0).text();
-		this.ownerName = info;
-
+		Element info = internalType.getElementsByClass("x_content").get(0).getElementsByClass("form-group").get(0);
+		this.ownerName = info.children().get(1).text();
 	}
 
 	private void setProjectName() {
-		this.divProject = record.getElementById("DivProject");
-		String info = divProject.getElementsByClass("x_panel").get(0).getElementsByClass("x_content").get(0)
-				.getElementsByClass("row").get(0).text();
-		this.projectName = info;
+		Element info = divProject.getElementsByClass("x_panel").get(0).getElementsByClass("x_content").get(0).getElementsByClass("form-group").get(0);
+		this.projectName = info.children().get(1).text();
 	}
 
 	private void setPinCodeAreaSqM() {
-		Element rootElement = divProject.getElementsByClass("x_panel").get(0).getElementsByClass("x_content").get(1)
-				.getElementsByClass("row").get(7).getElementsByClass("form-group").get(0);
+		Element info = divProject.getElementsByClass("x_panel").get(0).getElementsByClass("x_content").get(0).getElementsByClass("form-group").get(9);
 
-		Element pin = rootElement.children().get(1);
-		this.pinCode = pin.text();
-
-		Element area = rootElement.children().get(3);
-		this.projectArea = area.text();
+		this.pinCode = info.children().get(1).text();
+		this.projectArea = info.children().get(3).text();
 	}
 
 	private void setDivisionDistrict() {
-		Element rootElement = divProject.getElementsByClass("x_panel").get(0).getElementsByClass("x_content").get(1)
-				.getElementsByClass("row").get(5).getElementsByClass("form-group").get(0);
+		Element info = divProject.getElementsByClass("x_panel").get(0).getElementsByClass("x_content").get(0).getElementsByClass("form-group").get(7);
 
-		Element div = rootElement.children().get(1);
+		Element div = info.children().get(1);
 		this.division = div.text();
 
-		Element dist = rootElement.children().get(3);
+		Element dist = info.children().get(3);
 		this.district = dist.text();
 	}
 
@@ -94,26 +94,17 @@ public class MahareraRecord {
 	// }
 
 	private void setTalukaVillage() {
-		Element rootElement = divProject.getElementsByClass("x_panel").get(0).getElementsByClass("x_content").get(1)
-				.getElementsByClass("row").get(6).getElementsByClass("form-group").get(0);
-
-		Element tal = rootElement.children().get(1);
+		Element info = divProject.getElementsByClass("x_panel").get(0).getElementsByClass("x_content").get(0).getElementsByClass("form-group").get(8);
+		Element tal = info.children().get(1);
 		this.taluka = tal.text();
-
-		Element vil = rootElement.children().get(3);
+		Element vil = info.children().get(3);
 		this.village = vil.text();
 	}
 
-	// public static String getVillage(Document doc) {
-	// return null;
-	// }
-
-	// private void setProjectAreaSqM(Document doc) {
-	// return null;
-	// }
 
 	private void setProjectType(Document doc) {
-
+		Element info = divProject.getElementsByClass("x_panel").get(0).getElementsByClass("x_content").get(0).getElementsByClass("form-group").get(2);
+		this.projectType = info.children().get(3).text();
 	}
 
 	public static String buildingNo() {
@@ -168,8 +159,14 @@ public class MahareraRecord {
 		return null;
 	}
 
-	public static List<BuildingRecord> getBuildings(Document record) {
+	public List<BuildingRecord> setBuildings(Element divBuilding2) {
 		// TODO Auto-generated method stub
+		Elements e = divBuilding2.getElementsByClass("table");
+		Elements buildings = e.select("th:containsOwn(Project Name)");
+		System.out.println();
+		for (Element building: buildings){
+			this.Buildings .add(new BuildingRecord(building.parent()));
+		}
 		return null;
 	}
 	/**
