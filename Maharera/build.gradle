@@ -19,6 +19,7 @@ repositories {
 
 dependencies {
     compile 'org.jsoup:jsoup:1.10.3'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
 }
 
 test {

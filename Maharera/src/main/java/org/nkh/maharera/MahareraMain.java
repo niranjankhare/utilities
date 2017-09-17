@@ -5,24 +5,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.nodes.Document;
-import org.nkh.utils.HttpLib;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.nkh.utils.Parser;
 
-import org.xml.sax.*;
 
 
 public class MahareraMain {
 
 	public static void main(String[] args) {
 		
+		
 		try {
-//			HttpLib.doPost("https://maharerait.mahaonline.gov.in/Searchlist/GetDistrict", "");
-			Document docCompany = Parser.parse("RecordCompany.html");
-			MahareraRecord company  = new MahareraRecord(docCompany);
-			Document docIndividual = Parser.parse("RecordIndividual.html");
-			MahareraRecord rec  = new MahareraRecord(docIndividual);
+			String division = "Amravati";
+			String district = "Amravati";
+			Elements recordLinks = Parser.fetch(division, district);
+			String baseUrl = "https://maharerait.mahaonline.gov.in";
 			List<MahareraRecord> listRecords = new ArrayList<MahareraRecord>();
-			listRecords.add(rec);
+			for (Element e:recordLinks){
+				String absUrl = e.absUrl("href");
+				Document onlineRecord = Parser.parse(absUrl, true);
+				listRecords.add(new MahareraRecord(onlineRecord));
+			}
+//			Document docCompany = Parser.parse("RecordCompany.html");
+//			MahareraRecord company  = new MahareraRecord(docCompany);
+//			Document docIndividual = Parser.parse("RecordIndividual.html");
+//			MahareraRecord rec  = new MahareraRecord(docIndividual);
+//			
+//			listRecords.add(rec);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
