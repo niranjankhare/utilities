@@ -11,6 +11,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nkh.utils.Parser;
+import org.sql2o.Connection;
+import org.sql2o.Sql2o;
 import org.xml.sax.SAXException;
 
 public class MahareraRecord {
@@ -33,7 +35,7 @@ public class MahareraRecord {
 	private String village = "";
 	private String projectArea = "";
 	private String projectType = "";
-
+	private static Connection dbConnection = null;
 	public List<BuildingRecord> Buildings = new ArrayList<BuildingRecord>();
 	
 
@@ -70,7 +72,7 @@ public class MahareraRecord {
 		this.internalType = divPInfo.getElementById("fldind"); 
 		if (internalType == null)
 			internalType = divPInfo.getElementById("fldFirm");
-		String rawType = internalType.text();
+		this.inferredType = internalType.text();
 	}
 
 	private void setTypeInfo() {
@@ -195,11 +197,36 @@ public class MahareraRecord {
 	 * Pin Code Division District Taluka Village Area(In sqmts) Project Type
 	 */
 
-	public void commitToDB() {
+	public void commitToDB(Sql2o targetDb) {
+		if (dbConnection == null)
+			dbConnection = targetDb.open();
+		System.out.println("Commiting record to db");
+		String querySET = "SET url='"+ this.remoteReference.toString()+"'"
+				+ ", SET recordType='"+this.inferredType+"'"
+				+ ", SET promotorName='"+this.ownerName+"'"
+				+ ", SET projectName='"+this.projectName+"'"
+				+ ", SET pinCode='"+this.pinCode+"'"
+				+ ", SET division='"+this.division+"'"
+				+ ", SET district='"+this.district+"'"
+				+ ", SET taluka='"+this.taluka+"'"
+				+ ", SET village='"+this.village+"'"
+				+ ", SET area='"+this.projectArea+"'"
+				+ ", SET projectType='"+this.projectType+"'"
+				+ ", SET buildingNo='"+this.Buildings.size()+"'"
+				+ ", SET buildingName";
 		
 		
+		Integer r = dbConnection.createQuery("SELECT COUNT(*) FROM MAHARERA WHERE url='" + this.remoteReference.toString()+"'").executeAndFetch(Integer.class).get(0);
+		String query = "";
+		if (r>0){
+			query = "UPDATE MAHARERA "+ querySET + "WHERE url='"+ this.remoteReference.toString()+"'"+ " ;";
+		} else 	{
+			query = "INSERT MAHARERA "+ querySET + " ;";
+		}
+		Object o = dbConnection.createQuery("INSERT INTO MAHARERA SET url='"+ this.remoteReference.toString()+"'")
+		.executeUpdate();
+		System.out.println("Commiting record to db DONE");
 	}
-	
 	/*
 	 * MahareraRecord
 	 *    url VARCHAR(250) NOT NULL, 

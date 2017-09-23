@@ -1,6 +1,8 @@
 package org.nkh.maharera;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,9 @@ public class MahareraMain {
 		
 		
 		try {
+			
+			URL dbfile = MahareraMain.class.getClassLoader().getResource("maharera.mv.db");
+			String dbFilePath = new File (dbfile.toURI()).getParent()+"/";
 			String division = "Amravati";
 			String district = "Amravati";
 			Integer demoNumber = 2;
@@ -32,9 +37,9 @@ public class MahareraMain {
 				if (i>=demoNumber)
 					break;
 			}
-			Sql2o db =  new Sql2o ("jdbc:h2:D:/Users/niru/git/utilities/Maharera/src/main/resources/maharera","sa","");
+			Sql2o db =  new Sql2o ("jdbc:h2:"+dbFilePath+"maharera","sa","");
 			for (MahareraRecord record : listRecords){
-				record.commitToDB();
+				record.commitToDB(db);
 			}
 //			Document docCompany = Parser.parse("RecordCompany.html");
 //			MahareraRecord company  = new MahareraRecord(docCompany);
