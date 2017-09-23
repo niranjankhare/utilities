@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nkh.utils.Parser;
+import org.sql2o.Sql2o;
 
 
 
@@ -19,13 +20,21 @@ public class MahareraMain {
 		try {
 			String division = "Amravati";
 			String district = "Amravati";
+			Integer demoNumber = 2;
 			Elements recordLinks = Parser.fetch(division, district);
 			String baseUrl = "https://maharerait.mahaonline.gov.in";
 			List<MahareraRecord> listRecords = new ArrayList<MahareraRecord>();
+			Integer i = 0;
 			for (Element e:recordLinks){
 				String absUrl = e.absUrl("href");
-				Document onlineRecord = Parser.parse(absUrl, true);
-				listRecords.add(new MahareraRecord(onlineRecord));
+				listRecords.add(new MahareraRecord(absUrl));
+				System.out.println("Adding record number:" + ++i);
+				if (i>=demoNumber)
+					break;
+			}
+			Sql2o db =  new Sql2o ("jdbc:h2:D:/Users/niru/git/utilities/Maharera/src/main/resources/maharera","sa","");
+			for (MahareraRecord record : listRecords){
+				record.commitToDB();
 			}
 //			Document docCompany = Parser.parse("RecordCompany.html");
 //			MahareraRecord company  = new MahareraRecord(docCompany);

@@ -1,12 +1,17 @@
 package org.nkh.maharera;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.nkh.utils.Parser;
+import org.xml.sax.SAXException;
 
 public class MahareraRecord {
 
@@ -32,8 +37,20 @@ public class MahareraRecord {
 	public List<BuildingRecord> Buildings = new ArrayList<BuildingRecord>();
 	
 
-	public MahareraRecord(Document source) {
-		this.record = source;
+	public MahareraRecord(String absoluteURL) {
+		try {
+			remoteReference = new URL (absoluteURL);
+			this.record = Parser.parse(absoluteURL, true);
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.divPInfo = record.getElementById("DivPInfo");
 		setInferredType();
 		this.divPromo = record.getElementById("DivPromo");
@@ -42,8 +59,8 @@ public class MahareraRecord {
 		setTypeInfo();
 		setOwner();
 		setProjectName();
-		setPinCodeAreaSqM();
 		setDivisionDistrict();
+		setPinCodeAreaSqM();
 		setTalukaVillage();
 		setProjectType(record);
 		setBuildings(divBuilding);
@@ -64,6 +81,12 @@ public class MahareraRecord {
 	private void setOwner() {
 		Element info = internalType.getElementsByClass("x_content").get(0).getElementsByClass("form-group").get(0);
 		this.ownerName = info.children().get(1).text();
+		
+		if (typeInfo.equalsIgnoreCase("Individual")) {
+			this.ownerName = this.ownerName + " "
+			 + info.children().get(3).text();
+		}
+		
 	}
 
 	private void setProjectName() {
@@ -170,5 +193,38 @@ public class MahareraRecord {
 	}
 	/**
 	 * Pin Code Division District Taluka Village Area(In sqmts) Project Type
+	 */
+
+	public void commitToDB() {
+		
+		
+	}
+	
+	/*
+	 * MahareraRecord
+	 *    url VARCHAR(250) NOT NULL, 
+   recordType VARCHAR(250),
+   promotorName VARCHAR(50),   
+   projectName  VARCHAR(50), 
+   pinCode VARCHAR(50),
+   division VARCHAR(50),
+   distrrict VARCHAR(50),
+   taluka VARCHAR(50),
+   village VARCHAR(50),
+   area VARCHAR(50),
+   projectType VARCHAR(50),
+    buildingNo INT,
+   buildingName VARCHAR(50),
+   numBasements INT,
+   numPlinths INT,
+   numPodium INT,
+   numSlabs INT,
+   numStilts INT,
+   numOpenParking INT,
+   numClosedParking  INT,
+   apartmentType  VARCHAR(50), 
+   carpetArea  VARCHAR(50), 
+   numApartment INT,
+   numBookedApartment  INT
 	 */
 }
