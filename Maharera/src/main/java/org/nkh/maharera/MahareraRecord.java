@@ -131,57 +131,8 @@ public class MahareraRecord {
 		this.projectType = info.children().get(3).text();
 	}
 
-	public static String buildingNo() {
-		return null;
-	}
+	
 
-	public static String buildingName() {
-		return null;
-	}
-
-	public static String numBasements() {
-		return null;
-	}
-
-	public static String numPlinths() {
-		return null;
-	}
-
-	public static String numPodiums() {
-		return null;
-	}
-
-	public static String numSupStructSlabs() {
-		return null;
-	}
-
-	public static String numStilts() {
-		return null;
-	}
-
-	public static String numOpenParking() {
-		return null;
-	}
-
-	public static String numClosedParking() {
-		return null;
-	}
-
-	public static String apartmentType() {
-		return null;
-	}
-
-	public static String carpetAreaSqM() {
-		return null;
-	}
-
-	public static String numApartments() {
-		return null;
-	}
-
-	public static String bookedApartments() {
-		return null;
-	}
 
 	public List<BuildingRecord> setBuildings(Element divBuilding2) {
 		// TODO Auto-generated method stub

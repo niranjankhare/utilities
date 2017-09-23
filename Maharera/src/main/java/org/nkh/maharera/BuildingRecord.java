@@ -11,10 +11,6 @@ public class BuildingRecord {
 	List<ApartmentRecord> Apartments = new ArrayList<ApartmentRecord>();
 	
 	public BuildingRecord (Element htmlSource){
-//		Element b1 = p.get(0).parent().nextElementSibling(); // Building 1 data
-//		Element a1 = b1.nextElementSibling();
-//		Element b2 = p.get(1).parent().nextElementSibling(); // Building 2 data
-//		Element a2 = b2.nextElementSibling();
 		this.source = htmlSource.nextElementSibling();
 		setApartments (source.nextElementSibling());
 	}
@@ -25,5 +21,42 @@ public class BuildingRecord {
 			this.Apartments.add(new ApartmentRecord(apartments.get(i)));
 		}
 	}
+	
+	public static String buildingNo() {
+		return null;
+	}
+
+	public static String buildingName() {
+		return null;
+	}
+
+	public static String numBasements() {
+		return null;
+	}
+
+	public static String numPlinths() {
+		return null;
+	}
+
+	public static String numPodiums() {
+		return null;
+	}
+
+	public static String numSupStructSlabs() {
+		return null;
+	}
+
+	public static String numStilts() {
+		return null;
+	}
+
+	public static String numOpenParking() {
+		return null;
+	}
+
+	public static String numClosedParking() {
+		return null;
+	}
+
 	
 }
