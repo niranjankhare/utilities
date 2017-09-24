@@ -32,7 +32,8 @@ public class MahareraMain {
 			Integer i = 0;
 			for (Element e:recordLinks){
 				String absUrl = e.absUrl("href");
-				listRecords.add(new MahareraRecord(absUrl));
+//				listRecords.add(new MahareraRecord(absUrl));
+				listRecords.add(new MahareraRecord("RecordCompany.html"));
 				System.out.println("Adding record number:" + ++i);
 				if (i>=demoNumber)
 					break;

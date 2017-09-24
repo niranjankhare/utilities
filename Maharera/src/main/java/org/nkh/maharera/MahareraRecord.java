@@ -41,8 +41,9 @@ public class MahareraRecord {
 
 	public MahareraRecord(String absoluteURL) {
 		try {
-			remoteReference = new URL (absoluteURL);
-			this.record = Parser.parse(absoluteURL, true);
+//			remoteReference = new URL (absoluteURL);
+//			this.record = Parser.parse(absoluteURL, true);
+			this.record = Parser.parse(absoluteURL, false);
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -152,6 +153,11 @@ public class MahareraRecord {
 		if (dbConnection == null)
 			dbConnection = targetDb.open();
 		System.out.println("Commiting record to db");
+		for (BuildingRecord building:Buildings){
+			for (ApartmentRecord apartment: building.Apartments){
+				// commit
+			}
+		}
 		String querySET = "SET url='"+ this.remoteReference.toString()+"'"
 				+ ", SET recordType='"+this.inferredType+"'"
 				+ ", SET promotorName='"+this.ownerName+"'"
