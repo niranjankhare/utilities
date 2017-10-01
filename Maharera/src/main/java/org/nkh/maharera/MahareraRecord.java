@@ -1,6 +1,7 @@
 package org.nkh.maharera;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +42,10 @@ public class MahareraRecord {
 
 	public MahareraRecord(String absoluteURL) {
 		try {
-//			remoteReference = new URL (absoluteURL);
-//			this.record = Parser.parse(absoluteURL, true);
-			this.record = Parser.parse(absoluteURL, false);
+//			absoluteURL="RecordIndividual.html";
+			this.remoteReference = new URL (absoluteURL);
+			this.record = Parser.parse(absoluteURL, true);
+//			this.record = Parser.parse(absoluteURL, false);
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -73,7 +75,7 @@ public class MahareraRecord {
 		this.internalType = divPInfo.getElementById("fldind"); 
 		if (internalType == null)
 			internalType = divPInfo.getElementById("fldFirm");
-		this.inferredType = internalType.text();
+		this.inferredType = internalType.getElementsByTag("h2").get(0).text();
 	}
 
 	private void setTypeInfo() {
@@ -149,66 +151,47 @@ public class MahareraRecord {
 	 * Pin Code Division District Taluka Village Area(In sqmts) Project Type
 	 */
 
-	public void commitToDB(Sql2o targetDb) {
+	public java.sql.Connection commitToDB(Sql2o targetDb) {
 		if (dbConnection == null)
 			dbConnection = targetDb.open();
-		System.out.println("Commiting record to db");
-		for (BuildingRecord building:Buildings){
-			for (ApartmentRecord apartment: building.Apartments){
-				// commit
-			}
-		}
+//		System.out.println("Commiting record to db");
 		String querySET = "SET url='"+ this.remoteReference.toString()+"'"
-				+ ", SET recordType='"+this.inferredType+"'"
-				+ ", SET promotorName='"+this.ownerName+"'"
-				+ ", SET projectName='"+this.projectName+"'"
-				+ ", SET pinCode='"+this.pinCode+"'"
-				+ ", SET division='"+this.division+"'"
-				+ ", SET district='"+this.district+"'"
-				+ ", SET taluka='"+this.taluka+"'"
-				+ ", SET village='"+this.village+"'"
-				+ ", SET area='"+this.projectArea+"'"
-				+ ", SET projectType='"+this.projectType+"'"
-				+ ", SET buildingNo='"+this.Buildings.size()+"'"
-				+ ", SET buildingName";
-		
-		
-		Integer r = dbConnection.createQuery("SELECT COUNT(*) FROM MAHARERA WHERE url='" + this.remoteReference.toString()+"'").executeAndFetch(Integer.class).get(0);
-		String query = "";
-		if (r>0){
-			query = "UPDATE MAHARERA "+ querySET + "WHERE url='"+ this.remoteReference.toString()+"'"+ " ;";
-		} else 	{
-			query = "INSERT MAHARERA "+ querySET + " ;";
-		}
-		Object o = dbConnection.createQuery("INSERT INTO MAHARERA SET url='"+ this.remoteReference.toString()+"'")
-		.executeUpdate();
-		System.out.println("Commiting record to db DONE");
-	}
-	/*
-	 * MahareraRecord
-	 *    url VARCHAR(250) NOT NULL, 
-   recordType VARCHAR(250),
-   promotorName VARCHAR(50),   
-   projectName  VARCHAR(50), 
-   pinCode VARCHAR(50),
-   division VARCHAR(50),
-   distrrict VARCHAR(50),
-   taluka VARCHAR(50),
-   village VARCHAR(50),
-   area VARCHAR(50),
-   projectType VARCHAR(50),
-    buildingNo INT,
-   buildingName VARCHAR(50),
-   numBasements INT,
-   numPlinths INT,
-   numPodium INT,
-   numSlabs INT,
-   numStilts INT,
-   numOpenParking INT,
-   numClosedParking  INT,
-   apartmentType  VARCHAR(50), 
-   carpetArea  VARCHAR(50), 
-   numApartment INT,
-   numBookedApartment  INT
-	 */
+				+ ", recordType='"+this.inferredType+"'"
+				+ ", promotorName='"+this.ownerName+"'"
+				+ ", projectName='"+this.projectName+"'"
+				+ ", pinCode='"+this.pinCode+"'"
+				+ ", division='"+this.division+"'"
+				+ ", district='"+this.district+"'"
+				+ ", taluka='"+this.taluka+"'"
+				+ ", village='"+this.village+"'"
+				+ ", area='"+this.projectArea+"'"
+				+ ", projectType='"+this.projectType+"'";
+		for (BuildingRecord building:Buildings){
+			querySET = querySET 
+					+ ", buildingNo='"+building.buildingNo +"'"
+					+ ", buildingProjectName='"+ building.buildingProjectName + "'"
+					+ ", buildingName='"+ building.buildingName + "'"
+					+ ", numbasements='"+ building.numBasements + "'"
+					+ ", numPlinths='"+ building.numPlinths + "'"
+					+ ", numPodium='"+ building.numPodiums + "'"
+					+ ", numSlabs='"+ building.numSupSlabs + "'"
+					+ ", numStilts ='"+ building.numStilts + "'"
+					+ ", numOpenParking='"+ building.numOpenParkings + "'"
+					+ ", numClosedParking='"+ building.numClosedParkings + "'";
+			for (ApartmentRecord apartment: building.Apartments){
+				querySET = querySET 
+						+ ", apartmentTypeNo='"+apartment.apartmentTypeNo +"'"
+						+ ", apartmentType='"+apartment.apartmentType +"'"
+						+ ", carpetArea='"+apartment.carpetArea +"'"
+						+ ", numApartment='"+apartment.totalNumber +"'"
+						+ ", numBookedApartment='"+apartment.bookedNumber +"'";
+				Object o = dbConnection.createQuery("INSERT INTO MAHARERA "+querySET+";")
+				.executeUpdate();
+				System.out.println("Commiting record to db DONE");
+				
+			} // for each apartment
+		} // for each building
+		return dbConnection.getJdbcConnection();
+	} // commit to db		
+
 }

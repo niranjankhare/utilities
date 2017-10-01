@@ -8,11 +8,26 @@ task wrapper(type: Wrapper) {
 }
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Gradle Quickstart',
-                   'Implementation-Version': version
+       attributes 'Main-Class': 'org.nkh.maharera.MahareraMain', 
+        'Class-Path': './. lib/gson-2.6.2.jar  lib/h2-1.4.196.jar lib/jsoup-1.10.3.jar  lib/sql2o-1.5.4.jar',
+        'Implementation-Title': 'Maharera App',
+        'Implementation-Version': version
     }
+    
 }
-
+task copyToLib (type: Copy) {
+  outputs.upToDateWhen { false }
+    into "$buildDir/lib"
+    from configurations.runtime
+}
+task distZip(type: Zip) {
+baseName = archivesBaseName + '-dependencies'
+  destinationDir = new File("$buildDir/$libsDirName")
+  from("$buildDir") {
+   		include 'lib/*'    	
+	}
+}
+distZip.dependsOn copyToLib
 repositories {
     mavenCentral()
 }

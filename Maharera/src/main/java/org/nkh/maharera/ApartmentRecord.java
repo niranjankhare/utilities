@@ -2,7 +2,9 @@ package org.nkh.maharera;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.nkh.utils.Parser;
 public class ApartmentRecord {
+	public Integer apartmentTypeNo = null;
 	public String apartmentType = null;
 	public String carpetArea = null;
 	public Integer totalNumber = null;
@@ -11,6 +13,7 @@ public class ApartmentRecord {
 	Element source = null;
 	public ApartmentRecord (Element htmlSource){
 		this.source = htmlSource;
+		setApartmentTypeNumber();
 		setApartmentType();
 		setCarpetArea();		
 		setNumAparments();
@@ -18,33 +21,28 @@ public class ApartmentRecord {
 		setNumBookedApartments();
 	}
 	
+
 	
-	public <T> T getValue(Element element, Class<?> returnType){
-		String text = element.text();
-//		Object o = (T)new Object();
-		if (returnType==Integer.class){
-			return (T)(Object)Integer.parseInt(text);
-		} 
-		else 
-			return (T)text;
-		
+	public void setApartmentTypeNumber() {
+ 		this.apartmentTypeNo = Parser.getValue(source.getElementsByTag("td").get(0), Integer.class);
 	}
- 	public void setApartmentType() {
+	
+	public void setApartmentType() {
 //		this.buildingNo = Integer.parseInt(source.getElementsByTag("td").get(0).text());
- 		this.apartmentType = getValue(source.getElementsByTag("td").get(1), String.class);
+ 		this.apartmentType = Parser.getValue(source.getElementsByTag("td").get(1), String.class);
 	}
 	
  	private void setCarpetArea() {
-		this.carpetArea = getValue(source.getElementsByTag("td").get(2), String.class);		
+		this.carpetArea = Parser.getValue(source.getElementsByTag("td").get(2), String.class);		
 	}
 	
 	private void setNumAparments() {
-		this.totalNumber = getValue(source.getElementsByTag("td").get(3), Integer.class);
+		this.totalNumber = Parser.getValue(source.getElementsByTag("td").get(3), Integer.class);
 		
 	}
 	
 	private void setNumBookedApartments() {
-		this.bookedNumber = getValue(source.getElementsByTag("td").get(4), Integer.class);
+		this.bookedNumber = Parser.getValue(source.getElementsByTag("td").get(4), Integer.class);
 		
 	}
 

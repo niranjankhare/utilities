@@ -48,6 +48,15 @@ public class Parser {
 		return info;
 	}
 
+	public static <T> T getValue(Element element, Class<?> returnType){
+		String text = element.text();
+		if (returnType==Integer.class){
+			return (T)(Object)Integer.parseInt(text);
+		} 
+		else 
+			return (T)text;
+		
+	}
 	public static Elements fetch(String div, String dist) {
 		String baseUrl = "https://maharerait.mahaonline.gov.in";
 		String searchBaseURL = baseUrl+"/searchlist/search";
